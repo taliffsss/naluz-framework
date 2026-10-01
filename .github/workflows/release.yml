@@ -1,0 +1,65 @@
+name: Release
+
+# Publishes the version named in .github/release-tag: points that tag at the current commit of main (moving it if it
+# already exists) and creates the GitHub Release from releases/<tag>.md. Runs when .github/release-tag changes on main,
+# or by hand from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths: ['.github/release-tag']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Read and validate the tag
+        id: tag
+        run: |
+          TAG="$(tr -d '[:space:]' < .github/release-tag)"
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::'$TAG' is not a vX.Y.Z tag"; exit 1; }
+          [ -f "releases/$TAG.md" ] || { echo "::error::releases/$TAG.md (the release notes) does not exist"; exit 1; }
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Run the package checks on the commit being released
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, openssl, sodium, fileinfo, pdo_sqlite
+          coverage: none
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist
+      - run: find src -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+
+      - name: Point the tag at this commit
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -f -a "$TAG" -m "naluz/framework ${TAG#v}" "$GITHUB_SHA"
+          git push --force origin "refs/tags/$TAG"
+
+      - name: Create the GitHub Release from the notes
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="naluz/framework $TAG — $(head -1 "releases/$TAG.md" | sed -E 's/^# [^—]*— ?//')"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "$TITLE" --notes-file "releases/$TAG.md"
+          else
+            gh release create "$TAG" --verify-tag --title "$TITLE" --notes-file "releases/$TAG.md"
+          fi
