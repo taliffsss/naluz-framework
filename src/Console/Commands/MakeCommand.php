@@ -10,7 +10,7 @@ use Naluz\Console\Output;
 use Naluz\Foundation\Application;
 use Naluz\Support\Str;
 
-/** Generators: make:controller, make:model, make:middleware, make:migration. */
+/** Generators: make:controller, make:model, make:middleware, make:migration, make:provider, make:observer. */
 final class MakeCommand extends Command
 {
     public function __construct(Application $app, private readonly string $kind = 'controller')
@@ -20,7 +20,7 @@ final class MakeCommand extends Command
 
     public static function instances(Application $app): array
     {
-        return array_map(fn ($k) => new self($app, $k), ['controller', 'model', 'middleware', 'migration', 'factory', 'seeder', 'job', 'provider']);
+        return array_map(fn ($k) => new self($app, $k), ['controller', 'model', 'middleware', 'migration', 'factory', 'seeder', 'job', 'provider', 'observer']);
     }
 
     public function name(): string
@@ -66,6 +66,7 @@ final class MakeCommand extends Command
             'middleware' => ['App\\Http\\Middleware', 'app/Http/Middleware'],
             'job' => ['App\\Jobs', 'app/Jobs'],
             'provider' => ['App\\Providers', 'app/Providers'],
+            'observer' => ['App\\Observers', 'app/Observers'],
             'factory' => ['Database\\Factories', 'database/factories'],
             'seeder' => ['Database\\Seeders', 'database/seeders'],
         ][$this->kind];
@@ -135,6 +136,41 @@ final class {$class} extends \\Naluz\\Foundation\\ServiceProvider
     }
 
     public function boot(): void
+    {
+        //
+    }
+}
+PHP,
+            'observer' => <<<PHP
+/** Attach with #[ObservedBy({$class}::class)] on the model, or Model::observe({$class}::class) in a service provider. */
+final class {$class}
+{
+    public function creating(\\Naluz\\Database\\Orm\\Model \$model): void
+    {
+        //
+    }
+
+    public function created(\\Naluz\\Database\\Orm\\Model \$model): void
+    {
+        //
+    }
+
+    public function updating(\\Naluz\\Database\\Orm\\Model \$model): void
+    {
+        //
+    }
+
+    public function updated(\\Naluz\\Database\\Orm\\Model \$model): void
+    {
+        //
+    }
+
+    public function deleting(\\Naluz\\Database\\Orm\\Model \$model): void
+    {
+        //
+    }
+
+    public function deleted(\\Naluz\\Database\\Orm\\Model \$model): void
     {
         //
     }

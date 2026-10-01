@@ -75,9 +75,17 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
     /** @var array<class-string,array<string,list<\Closure>>> */
     private static array $listeners = [];
     private const EVENTS = ['saving', 'saved', 'creating', 'created', 'updating', 'updated', 'deleting', 'deleted'];
+    /** @var array<class-string,true> models whose #[ObservedBy] attributes were already registered */
+    private static array $bootedObservers = [];
+    /** @var array<class-string,array<string,true>> observer classes already attached, per model */
+    private static array $observed = [];
 
     final public function __construct(array $attributes = [])
     {
+        if (!isset(self::$bootedObservers[static::class])) {
+            self::$bootedObservers[static::class] = true;
+            static::bootObservers();
+        }
         $this->fill($attributes);
     }
 
@@ -164,10 +172,55 @@ abstract class Model implements \JsonSerializable, \ArrayAccess
         self::$modelCache?->flushTable($model->connection()->name(), $model->getTable());
     }
 
-    /** Forget every registered model event listener (useful in tests). */
+    /** Forget every registered model event listener and observer (useful in tests). */
     public static function flushEventListeners(): void
     {
         self::$listeners = [];
+        self::$observed = [];
+        self::$bootedObservers = [];
+    }
+
+    /**
+     * Register observers: every public method named after a model event (`saving`, `saved`, `creating`, `created`,
+     * `updating`, `updated`, `deleting`, `deleted`) becomes a listener and receives the model. As with closures,
+     * returning `false` from a `-ing` method cancels the operation. Observers given as class names are built lazily
+     * on the first event (through the container when one is available, so constructor dependencies are injected).
+     *
+     * @param class-string|object|list<class-string|object> $observers
+     */
+    public static function observe(string|object|array $observers): void
+    {
+        foreach (is_array($observers) ? $observers : [$observers] as $observer) {
+            $key = is_object($observer) ? spl_object_id($observer) . ':' . $observer::class : $observer;
+            if (isset(self::$observed[static::class][$key])) {
+                continue;
+            }
+            if (is_string($observer) && !class_exists($observer)) {
+                throw new \InvalidArgumentException("Observer class [{$observer}] does not exist.");
+            }
+            self::$observed[static::class][$key] = true;
+
+            $class = is_object($observer) ? $observer::class : $observer;
+            $instance = is_object($observer) ? $observer : null;
+            foreach (self::EVENTS as $event) {
+                if (method_exists($class, $event) && (new \ReflectionMethod($class, $event))->isPublic()) {
+                    self::$listeners[static::class][$event][] = static function (Model $model) use (&$instance, $class, $event): mixed {
+                        $instance ??= self::$container instanceof \Naluz\Container\Container ? self::$container->make($class) : new $class();
+                        return $instance->{$event}($model);
+                    };
+                }
+            }
+        }
+    }
+
+    /** Registers observers declared with #[ObservedBy] on this model (or a parent class). */
+    private static function bootObservers(): void
+    {
+        for ($class = new \ReflectionClass(static::class); $class; $class = $class->getParentClass() ?: null) {
+            foreach ($class->getAttributes(Attributes\ObservedBy::class) as $attribute) {
+                static::observe($attribute->newInstance()->observers);
+            }
+        }
     }
 
     // ------------------------------------------------------------------ static API
