@@ -1,0 +1,66 @@
+{
+    "name": "naluz/framework",
+    "description": "NaluzPHP framework core: container, HTTP/PSR-15 router, ORM + query builder, NoSQL, queues, mail, scheduler, storage, templates, security.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "framework",
+        "php",
+        "orm",
+        "query-builder",
+        "rest-api",
+        "psr",
+        "queue",
+        "mailer",
+        "scheduler",
+        "templating"
+    ],
+    "authors": [
+        {
+            "name": "Mark Anthony Naluz",
+            "email": "anthony.naluz15@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-fileinfo": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-sodium": "*",
+        "guzzlehttp/guzzle": "^7.9",
+        "nyholm/psr7": "^1.8",
+        "nyholm/psr7-server": "^1.1",
+        "psr/cache": "^3.0",
+        "psr/clock": "^1.0",
+        "psr/container": "^2.0",
+        "psr/event-dispatcher": "^1.0",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^2.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/link": "^2.0",
+        "psr/log": "^3.0",
+        "psr/simple-cache": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Naluz\\": "src/"
+        },
+        "files": [
+            "src/Support/helpers.php"
+        ]
+    },
+    "suggest": {
+        "ext-redis": "Not required: NaluzPHP ships its own Redis client.",
+        "ext-pcntl": "Lets queue:work shut down gracefully on SIGTERM/SIGINT.",
+        "mongodb/mongodb": "MongoDB driver for NoSQL (needs ext-mongodb); the file and memory NoSQL drivers need nothing.",
+        "ext-pdo_sqlsrv": "Microsoft SQL Server (with the Microsoft ODBC driver)."
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
