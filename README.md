@@ -54,27 +54,37 @@ composer require naluz/framework
 ```
 
 ```php
-// bootstrap
-$app = new Naluz\Foundation\Application(__DIR__, $config);
-$app->boot();
+// bootstrap/app.php — creates the application (config is read from config/*.php and .env)
+$app = new Naluz\Foundation\Application(dirname(__DIR__));
 ```
 
-A route, a query and a model in a few lines:
+A route, a controller, a query and a model:
 
 ```php
-$router->get('/api/users/{id}', fn (Request $r, int $id) => User::findOrFail($id));
+// routes/api.php
+$router->get('/ping', [StatusController::class, 'ping'])->name('ping');
+$router->apiResource('posts', PostController::class);       // index/show/store/update/destroy
 
-$adults = DB::table('users')->where('age', '>=', 18)->orderBy('name')->paginate(15);
-
-final class Post extends Model
+// controller methods receive PSR-7 requests, route params and injected services
+public function index(ServerRequestInterface $request): Paginator
 {
-    public function author(): BelongsTo
+    return Post::published()->with('author')->latest()->paginate(15, 1);   // eager loaded, no N+1
+}
+
+// query builder (independent of the ORM)
+$adults = $db->table('users')->where('age', '>=', 18)->orderBy('name')->paginate(15, 1);
+
+// model
+final class Post extends Naluz\Database\Orm\Model
+{
+    public function author(): Naluz\Database\Orm\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 }
-Post::with('author')->latest()->get();     // eager loaded, no N+1
 ```
+
+The application skeleton contains a complete, working example (`PostController`, models, migrations, tests).
 
 ## Design principles
 
