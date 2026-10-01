@@ -36,7 +36,7 @@ PSR coverage: 1, 3, 4, 6, 7, 11, 12, 13, 14, 15, 16, 17, 18, 20.
 Use the application skeleton, which already requires this package:
 
 ```bash
-git clone https://github.com/taliffsss/framework my-app
+git clone https://github.com/taliffsss/naluzphp-framework my-app
 cd my-app
 composer install
 cp .env.example .env && php naluz key:generate --jwt
@@ -45,7 +45,7 @@ php naluz run:server --port=8001      # http://127.0.0.1:8001
 ```
 
 Documentation, examples and the test suite live in the skeleton repository:
-**https://github.com/taliffsss/framework** (`docs/`).
+**https://github.com/taliffsss/naluzphp-framework** (`docs/`).
 
 ## Installing the core directly
 
