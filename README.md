@@ -1,10 +1,15 @@
 # naluz/framework
 
-The NaluzPHP framework core. Applications consume it as a Composer dependency (`vendor/naluz/framework`); the starter
-application lives in the repository root.
+The NaluzPHP framework core: container, PSR-15 router, ORM and query builder (MySQL, PostgreSQL, SQL Server, SQLite,
+read/write splitting), NoSQL document stores, queues, mail, scheduler, storage, templates and security.
+
+Applications consume it as a Composer dependency:
 
 ```bash
 composer require naluz/framework
 ```
 
-Docs: see the application repository's `docs/` folder.
+Start a new project from the application skeleton: https://github.com/taliffsss/framework — the skeleton holds the
+documentation (`docs/`) and the test suite that exercises this package.
+
+MIT licensed.

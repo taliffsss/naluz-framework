@@ -1,6 +1,5 @@
 {
     "name": "naluz/framework",
-    "version": "1.0.0",
     "description": "NaluzPHP framework core: container, HTTP/PSR-15 router, ORM + query builder, NoSQL, queues, mail, scheduler, storage, templates, security.",
     "type": "library",
     "license": "MIT",
@@ -63,5 +62,6 @@
         "sort-packages": true
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "homepage": "https://github.com/taliffsss/naluz-framework"
 }
