@@ -46,7 +46,8 @@ php naluz run:server --port=8001      # http://127.0.0.1:8001
 ```
 
 Documentation, examples and the test suite live in the skeleton repository:
-**https://github.com/taliffsss/naluzphp-framework** (`docs/`).
+**https://github.com/taliffsss/naluzphp-framework**. The documentation is published from
+[`naluz-framework-docs`](https://github.com/taliffsss/naluz-framework-docs): <https://taliffsss.github.io/naluz-framework-docs/>.
 
 ## Installing the core directly
 
