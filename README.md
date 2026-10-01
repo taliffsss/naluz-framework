@@ -18,6 +18,7 @@ no hidden magic: everything is plain PHP 8.2+ with `declare(strict_types=1)` and
 | **Drivers** | SQLite, MySQL/MariaDB, PostgreSQL, **SQL Server** |
 | **Read/write splitting** | Separate primary and replica connections (replica pools, sticky reads, failover, read-only replicas) |
 | **NoSQL** | Document stores (`file`, `memory`, **MongoDB**) with an injection-safe query builder |
+| **GraphQL** | Built-in GraphQL server: code-first schemas, validation, introspection, depth/size limits, masked errors |
 | **Model caching** | Opt-in query caching (`MODEL_CACHING=true`, Redis or local), 5-minute TTL, automatic invalidation and re-caching on writes |
 | **Queues** | Sync, database and Redis drivers, retries/backoff, failed-job table, `queue:work` |
 | **Mail** | SMTP / log / array transports, queued sending, header-injection protection |

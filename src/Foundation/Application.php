@@ -68,6 +68,7 @@ final class Application extends Container
             \Naluz\Schedule\ScheduleServiceProvider::class,
             \Naluz\Database\ModelCacheServiceProvider::class,
             \Naluz\NoSql\NoSqlServiceProvider::class,
+            \Naluz\GraphQL\GraphQLServiceProvider::class,
             ...(new PackageManifest($this->basePath))->providers((array) $config->get('app.dont_discover', [])),
             ...(array) $config->get('app.providers', []),
         ];
