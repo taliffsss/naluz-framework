@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  package:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo_sqlite, mbstring, openssl, sodium, fileinfo
+          coverage: none
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist
+      - name: Lint every source file
+        run: find src -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - name: Every class autoloads (PSR-4)
+        run: |
+          php -r '
+          require "vendor/autoload.php";
+          $bad = 0;
+          $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator("src", FilesystemIterator::SKIP_DOTS));
+          foreach ($it as $f) {
+              if ($f->getExtension() !== "php" || $f->getFilename() === "helpers.php") { continue; }
+              $class = "Naluz\\" . str_replace("/", "\\", substr($f->getPathname(), 4, -4));
+              if (!class_exists($class) && !interface_exists($class) && !trait_exists($class) && !enum_exists($class)) {
+                  fwrite(STDERR, "not autoloadable: $class\n"); $bad++;
+              }
+          }
+          exit($bad ? 1 : 0);'
