@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased (1.1.0)
+## 1.1.0 — model observers
+
+Full notes: [releases/v1.1.0.md](releases/v1.1.0.md).
 
 ### Added
 - Model observers: `Model::observe(Observer::class|object|list)` turns public methods named after model events
