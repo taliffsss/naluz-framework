@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 — packaging fix
+
+Same code as the intended 1.2.0 (GraphQL server and model observers). The `v1.2.0` tag had been re-pointed after it was
+published on Packagist, so Composer could install a 1.2.0 without GraphQL. Require `^1.2.1`. See [releases/v1.2.1.md](releases/v1.2.1.md).
+
 ## 1.2.0 — GraphQL and model observers
 
 Full notes: [releases/v1.2.0.md](releases/v1.2.0.md).
