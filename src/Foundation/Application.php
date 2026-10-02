@@ -18,7 +18,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class Application extends Container
 {
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.2.2';
 
     private static ?self $instance = null;
     private bool $booted = false;

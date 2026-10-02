@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 — clean release
+
+GraphQL server and model observers, published correctly (1.2.0 and 1.2.1 were indexed by Packagist at an earlier commit without GraphQL; do not
+use them). `Application::VERSION` now reports `1.2.2`. Require `^1.2.2`. See [releases/v1.2.2.md](releases/v1.2.2.md).
+
 ## 1.2.1 — packaging fix
 
 Same code as the intended 1.2.0 (GraphQL server and model observers). The `v1.2.0` tag had been re-pointed after it was
