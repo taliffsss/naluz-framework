@@ -56,6 +56,8 @@
         "ext-redis": "Not required: NaluzPHP ships its own Redis client.",
         "ext-pcntl": "Lets queue:work shut down gracefully on SIGTERM/SIGINT.",
         "mongodb/mongodb": "MongoDB driver for NoSQL (needs ext-mongodb); the file and memory NoSQL drivers need nothing.",
+        "php-amqplib/php-amqplib": "RabbitMQ event streaming (messaging connection 'rabbitmq').",
+        "ext-rdkafka": "Apache Kafka event streaming (messaging connection 'kafka'). Redis Streams and the memory broker need nothing.",
         "ext-pdo_sqlsrv": "Microsoft SQL Server (with the Microsoft ODBC driver)."
     },
     "config": {

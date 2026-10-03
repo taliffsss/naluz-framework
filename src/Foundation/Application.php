@@ -18,7 +18,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class Application extends Container
 {
-    public const VERSION = '1.2.2';
+    public const VERSION = '1.3.0';
 
     private static ?self $instance = null;
     private bool $booted = false;
@@ -69,6 +69,7 @@ final class Application extends Container
             \Naluz\Database\ModelCacheServiceProvider::class,
             \Naluz\NoSql\NoSqlServiceProvider::class,
             \Naluz\GraphQL\GraphQLServiceProvider::class,
+            \Naluz\Messaging\MessagingServiceProvider::class,
             ...(new PackageManifest($this->basePath))->providers((array) $config->get('app.dont_discover', [])),
             ...(array) $config->get('app.providers', []),
         ];
