@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0 — event streaming (optional)
+
+Full notes: [releases/v1.3.0.md](releases/v1.3.0.md).
+
+### Added
+- `Naluz\Messaging`: publish and consume events through Redis Streams, RabbitMQ or Kafka (or an in-memory broker for tests),
+  all optional. `EventBus`, `Consumer`, `Subscriber`, `PublishableEvent`, `BrokerManager`, `MessagingServiceProvider`.
+- Retries per consumer group, dead-letter topics (`<topic>.dlq`), optional HMAC-SHA256 message signing with key rotation,
+  size and depth limits, topic-name validation.
+- `messaging:consume`, `messaging:declare`, `messaging:publish`, `make:subscriber`.
+- Redis Streams needs no dependency; RabbitMQ needs `php-amqplib/php-amqplib`; Kafka needs `ext-rdkafka`.
+
 ## 1.2.2 — clean release
 
 GraphQL server and model observers, published correctly (1.2.0 and 1.2.1 were indexed by Packagist at an earlier commit without GraphQL; do not

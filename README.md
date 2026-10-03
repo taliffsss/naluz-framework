@@ -21,6 +21,7 @@ no hidden magic: everything is plain PHP 8.2+ with `declare(strict_types=1)` and
 | **GraphQL** | Built-in GraphQL server: code-first schemas, validation, introspection, depth/size limits, masked errors |
 | **Model caching** | Opt-in query caching (`MODEL_CACHING=true`, Redis or local), 5-minute TTL, automatic invalidation and re-caching on writes |
 | **Queues** | Sync, database and Redis drivers, retries/backoff, failed-job table, `queue:work` |
+| **Event streaming** | Optional event-driven messaging over **Redis Streams**, **RabbitMQ** or **Kafka**: `EventBus`, consumer groups, retries, dead-letter topics, HMAC-signed messages |
 | **Mail** | SMTP / log / array transports, queued sending, header-injection protection |
 | **Scheduler** | Cron-style task scheduling with overlap protection |
 | **Storage** | Root-confined file storage and safe uploads (content-based type detection) |
